@@ -22,6 +22,10 @@ public class BlackKnight {
 	public static void setBattle(int initialNumber) {
 		// TODO initialize array of knights with the passed size.
 		// Reset total numbers of total, alive and dead knights to zero
+		totalKnights = 0;
+		aliveKnights = 0;
+		deadKnights = 0;
+		knights = new BlackKnight[initialNumber];
 	}
 
 	public BlackKnight(String name) {
@@ -33,6 +37,15 @@ public class BlackKnight {
 		// 4. increase number of total and alive knights of static counters
 		// HINT: use "this.name" to access name of knight which otherwise is shadowed
 		// by parameter of constructor, which is also called "name"
+		this.name = name;
+		arms = 2; legs = 2; head = 1;
+		alive = true;
+
+		knights[aliveKnights] = this;
+
+		totalKnights++;
+		aliveKnights++;
+
 	}
 
 	public String cutOffArm() {
@@ -40,7 +53,14 @@ public class BlackKnight {
 		// If knight is dead, return "Only chicken beats dead!"
 		// If knight has some arms, cut one off and return "Tis but a scratch!"
 		// Else return just "Haah!"
-		return "";
+		if(alive == false) {
+			return "Only chicken beats dead!";
+		}
+		else if (arms > 0) {
+			arms -= 1;
+			return "Tis but a scratch!";
+		}
+		else return "Haah!";
 	}
 
 	public String cutOffLeg() {
@@ -48,7 +68,14 @@ public class BlackKnight {
 		// If knight is dead, return "Only chicken beats dead!"
 		// If knight has some legs, cut one off and return "Had worse!"
 		// Else return just "Haah!"
-		return "";
+		if(alive == false) {
+			return "Only chicken beats dead!";
+		}
+		else if (legs > 0) {
+			legs -= 1;
+			return "Had worse!";
+		}
+		else return "Haah!";
 	}
 
 	public String cutOffHead() {
@@ -60,7 +87,27 @@ public class BlackKnight {
 		// "You'l never win! Arthur, Cnut will still fight!"
 		// Where "Arthur, Cnut" are names of still alive knights
 		// Else return "You'l burn in hell forever!"
-		return "";
+		if (alive == false) {
+			return "Only chicken beats dead!";
+		}
+		else if (head == 1) {
+			head -= 1;
+			alive = false;
+			aliveKnights -= 1;
+			deadKnights += 1;
+			String currAliveKnights = "";
+			String delim = "";
+			if (aliveKnights > 0) {
+				for (BlackKnight knight : knights) {
+					if (knight.alive == true) {
+						currAliveKnights = currAliveKnights + delim + knight.name;
+						delim = ", ";
+					}
+				}
+				return "You'l never win! " + currAliveKnights + " will still fight!";
+			}
+		}
+		return "You'l burn in hell forever!";
 	}
 
 }
