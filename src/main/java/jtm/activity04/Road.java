@@ -11,10 +11,21 @@ public class Road {
 	 * values of the newly created object
 	 */
 
+	 public Road(String from, String to, int distance) {
+		this.from = from;
+		this.to = to;
+		this.distance = distance;
+	 }
+
 	/*- TODO #2
 	 * Create constructor without parameters, which sets empty
 	 * values or 0 to all object properties
 	 */
+	public Road() {
+		this.from = "";
+		this.to = "";
+		this.distance = 0;
+	}
 
 
 	/*- TODO #3
@@ -22,6 +33,30 @@ public class Road {
 	 * and generate public getters/setters for distance, from and to
 	 * fields
 	 */
+
+	 public void setFrom(String from) {
+		this.from = from;
+	 } 
+
+	 public void setTo(String to) {
+		this.to = to;
+	 }
+
+	 public void setDistance(int distance) {
+		this.distance = distance;
+	 }
+
+	 public String getFrom() {
+		return this.from;
+	 }
+
+	 public String getTo() {
+		return this.to;
+	 }
+
+	 public int getDistance() {
+		return this.distance;
+	 }
 
 
 	/*- TODO #4
@@ -34,5 +69,8 @@ public class Road {
 	 * See more at: https://en.wikipedia.org/wiki/Dash
 	 */
 
-
+	@Override
+	public String toString() {
+		return from + " – " + to + ", " + distance + "km";
+	}
 }

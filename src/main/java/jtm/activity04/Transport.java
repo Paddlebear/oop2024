@@ -16,12 +16,51 @@ public class Transport {
 	 * And make fuel tank full.
 	 */
 
+	 public Transport(String id, float consumption, int tankSize) {
+		this.id = id;
+		this.consumption = consumption;
+		this.tankSize = tankSize;
+		this.fuelInTank = tankSize;
+	 }
+
 
 	/*- TODO #2
 	 * Select menu: Source — Generate getters and Setters...
 	 * and generate public getters for consumption, tankSize, id, and
 	 * fuelInTank fields
 	 */
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setConsumption(float consumption) {
+		this.consumption = consumption;
+	}
+
+	public void setTankSize(int tankSize) {
+		this.tankSize = tankSize;
+	}
+
+	public void setFuelInTank(float fuelInTank) {
+		this.fuelInTank = fuelInTank;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public float getConsumption() {
+		return this.consumption;
+	}
+
+	public int getTankSize() {
+		return this.tankSize;
+	}
+
+	public float getFuelInTank() {
+		return this.fuelInTank;
+	}
 
 	/*- TODO #3
 	 * Select menu: Source — Generate toString()...
@@ -32,12 +71,19 @@ public class Transport {
 	 * to 2 decimal for fractions, and dot as a decimal delimiter.
 	 */
 
+	@Override
+	public String toString() {
+		return String.format("Id:%s cons:%.1fl/100km, tank:%dl, fuel:%.2fl", id, consumption, tankSize, fuelInTank);
+		 
+	}
+
 
 	// Return transport id and type as string e.g. "AAA Transport"
 	// HINT: use this.getClass().getSimpleName(); to get type of transport
 	protected final String getType() {
 		// TODO return required value
-		return "";
+		//return "";
+		return id + " " + this.getClass().getSimpleName();
 	}
 
 	// HINT: use getType() to describe transport and road.toString() to describe
@@ -51,7 +97,13 @@ public class Transport {
 		// TODO If there is no enough fuel in tank, return string in form:
 		// "Cannot move on From–To, 180km. Necessary
 		// fuel:0.00l, fuel in tank:0.00l"
-		return "";
+		//return "";
+		float fuelNeed = (road.getDistance() * consumption) / 100;
+		if (fuelNeed < fuelInTank) {
+			fuelInTank -= fuelNeed;
+			return getType() + " is moving on " + road;
+		}
+		else return "Cannot move on " + road + ". Necessary fuel:" + String.format(Locale.US, "%.2f", fuelNeed) + "l, fuel in tank:" + String.format(Locale.US, "%.2f", fuelInTank) + "l";
 	}
 
 }
