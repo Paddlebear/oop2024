@@ -5,15 +5,15 @@ import jtm.activity04.Transport;
 
 public class Ship extends Transport{
     
-    protected byte sails;
+    protected byte buras;
 
     public Ship(String id, float consumption, int tankSize) {
         super(id, consumption, tankSize);
     }
 
-    public Ship(String id, byte sails) {
+    public Ship(String id, byte buras) {
         super(id, 0, 0);
-        this.sails = sails;
+        this.buras = buras;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class Ship extends Transport{
         }
         if (transport instanceof Ship) {
             Ship ship = (Ship) transport;
-            return ship.getType() + " is sailing on " + road + " with " + ship.sails + " sails";
+            return ship.getType() + " is sailing on " + road + " with " + ship.buras + " sails";
         }
         return "ERROR: unknown transport type!";
     }
