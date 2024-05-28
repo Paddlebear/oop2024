@@ -25,9 +25,62 @@ package jtm.activity09;
  * 
  */
 
-public class Order {
+public class Order implements Comparable<Order> {
 	String customer; // Name of the customer
 	String name; // Name of the requested item
 	int count; // Count of the requested items
 
+	// Constructor
+	public Order(String customer, String name, Integer count) {
+		this.customer = customer;
+		this.name = name;
+		this.count = count;
+	}
+
+	// Comparison implementation according to the specified logic
+	@Override
+	public int compareTo(Order order) {
+		int itemNameComparison = this.name.compareTo(order.name);
+		if (itemNameComparison != 0) {
+			return itemNameComparison;
+		}
+
+		int customerNameComparison = this.customer.compareTo(order.customer);
+		if (customerNameComparison != 0) {
+			return customerNameComparison;
+		}
+
+		return Integer.compare(this.count, order.count);
+	}
+
+	// Check equality of orders
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Order)) {
+			return false;
+		}
+
+		Order otherOrder = (Order) obj;
+		return this.compareTo(otherOrder) == 0;
+	}
+
+	// Generate hashCode based on the specified logic
+	@Override
+	public int hashCode() {
+		int prime = 31;
+		int result = 1;
+		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + count;
+		return result;
+	}
+
+	// Generate string representation of the order
+	@Override
+	public String toString() {
+		return name + ": " + customer + ": " + count;
+	}
 }

@@ -29,7 +29,11 @@ public class ArrayFillerManager {
 		// initialize array with passed size
 		// initialize list of threads
 		// return reference to the initialized array
-		return null;
+		ArrayFillerManager.array = new int[arraySize];
+		ArrayFillerManager.latency = latency;
+		ArrayFillerManager.startValue = startValue;
+		threads = new LinkedList<>();
+		return array;
 	}
 
 	public static void fillStupidly() {
@@ -40,6 +44,10 @@ public class ArrayFillerManager {
 		// current (main) thread.
 		// Note that this method emulates, what would happen if you would send
 		// just small portions of data through media with latency.
+		for (int i = 0; i < array.length - 1; i++) {
+			ArrayFiller arrayFiller = new ArrayFiller(latency, startValue, i, i);
+			arrayFiller.run();
+		}
 	}
 
 	public static void fillSequentially() {
@@ -48,6 +56,10 @@ public class ArrayFillerManager {
 		// Note that this method emulates, what would happen if you would do
 		// proper "buffering" with large amount of data, but do execution just
 		// in single thread.
+		for (int i = 0; i < array.length - 1; i++) {
+			ArrayFiller arrayFiller = new ArrayFiller(latency, startValue, 0, array.length - 1);
+			arrayFiller.run();
+		}
 	}
 
 	public static void fillParalelly() {
@@ -63,6 +75,23 @@ public class ArrayFillerManager {
 		// actually finished by calling .join() method for them.
 		// Note that this method emulates, what would happen if you do proper
 		// buffering and scaling of the execution.
+
+		int threadCount = 4;
+		int arraySize = array.length;
+
+		for (int i = 0; i < threadCount; i++) {
+			int from = i * arraySize / threadCount;
+			int to = (i+1) * arraySize / threadCount;
+			ArrayFiller arrayFiller = new ArrayFiller(latency, startValue, from, to);
+			Thread thread = new Thread(arrayFiller);
+			threads.add(thread);
+			thread.start();
+		}
+		for (Thread thread : threads) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) { }
+		}
 
 	}
 

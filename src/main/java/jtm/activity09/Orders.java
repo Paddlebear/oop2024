@@ -1,5 +1,9 @@
 package jtm.activity09;
 
+import org.apache.commons.lang3.ObjectUtils.Null;
+import org.mockito.internal.matchers.Or;
+
+import java.util.*;
 
 /*- TODO #2
  * Implement Iterator interface with Orders class
@@ -29,7 +33,7 @@ package jtm.activity09;
  *  - ItemN: Customer1,Customer2: 4
  */
 
-public class Orders {
+public class Orders implements Iterator<Order> {
 	/*-
 	 * TODO #1
 	 * Create data structure to hold:
@@ -40,4 +44,85 @@ public class Orders {
 	 *   2. when constructing list of orders, set number of current order to -1
 	 *      (which is usual approach when working with iterateable collections).
 	 */
+	private List<Order> orderList;
+	private Iterator iterator;
+
+	// Constructor to create a new empty Orders
+	public Orders() {
+		orderList = new ArrayList<>();
+		iterator = orderList.iterator();
+	}
+
+	// Add passed order to the Orders
+	public void add(Order item) {
+		orderList.add(item);
+	}
+
+	// Get List of all customer orders
+	public List<Order> getItemsList() {
+		return orderList;
+	}
+
+	// Calculate Set of Orders from list
+	public Set<Order> getItemsSet() {
+		Collections.sort(orderList);
+		Set<Order> bulkOrdersSet = new TreeSet<>();
+		Order prevOrder = new Order(null,"",0);
+		Order bulkOrder = null;
+
+		for (Order currentOrder : orderList) {
+			if (prevOrder.name.equals(currentOrder.name)) {
+				bulkOrder.customer = bulkOrder.customer + "," + currentOrder.customer;
+				bulkOrder.count = bulkOrder.count + currentOrder.count;
+			} else {
+				if (bulkOrder != null) {
+					bulkOrdersSet.add(bulkOrder);
+				}
+
+				bulkOrder = new Order(currentOrder.customer,currentOrder.name,currentOrder.count);
+			}
+			prevOrder = currentOrder;
+		}
+		if (bulkOrder != null) {
+			bulkOrdersSet.add(bulkOrder);
+		}
+		// This has an issue
+		return bulkOrdersSet;
+
+	}
+
+	// Sort list of orders according to the sorting rules
+	public void sort() {
+		Collections.sort(orderList);
+	}
+
+	// Check if there is next Order in Orders
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
+	}
+
+	// Get next Order from Orders
+	@Override
+	public Order next() {
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
+		return (Order)iterator.next();
+	}
+
+	// Remove current Order from list
+	public void remove() {
+		if (!iterator.hasNext() || iterator.equals(null)) {
+			throw new IllegalStateException();
+		}
+		orderList.remove(iterator);
+		//currentIndex--;
+	}
+
+	// Show list of Orders as a String
+	@Override
+	public String toString() {
+		return orderList.toString();
+	}
 }

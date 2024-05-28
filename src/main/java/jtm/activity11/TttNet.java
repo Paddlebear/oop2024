@@ -38,15 +38,22 @@ public class TttNet {
 			 * create ServerSocket object and get
 			 * Socket object by executing accept() method for it
 			 */
+			server = new ServerSocket(port);
+			socket = server.accept();
 			/*- TODO #2
 			 * Initialize input/output streams to the socket
 			 * input = InputStream < Socket
 			 * output = OutputStream < Socket
 			 */
+			input = socket.getInputStream();
+			output = socket.getOutputStream();
 			/*- TODO #3
 			 * Create TttCli object and use initialized socket streams for it's input and output
 			 * execute play() method for it to start it running
 			 */
+			tttCli = new TttCli(input, output, size);
+			tttCli.play();
+			socket.close();
 		} catch (Exception e) {
 			// catching BindException is OK, if second instance is executed, just continue
 			// then, catching other exceptions may not be OK
@@ -59,6 +66,7 @@ public class TttNet {
 			/*- TODO #1
 			 * initialize client socket to the server
 			 */
+			socket = new Socket(host, port);
 			/*-
 			 *  TODO #2 intitialize readers and writers to the streams of socket
 			 *  and to system input and output:
@@ -68,6 +76,10 @@ public class TttNet {
 			 *  stdin = BufferedReader < InputStreamReader < System.in
 			 *  srvout = PrintWriter > OutputStream > Socket
 			 */
+			srvin = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			stdout = new PrintWriter(System.out);
+			stdin = new BufferedReader(new InputStreamReader(System.in));
+			srvout = new PrintWriter(socket.getOutputStream());
 			/*-
 			 *  TODO #3
 			 *  While game is not ended:
@@ -83,6 +95,29 @@ public class TttNet {
 			 *  2. Don't forget to flush buffers!
 			 *  3. Don't forget to close socket!
 			 */
+			String line = "";
+			
+			while(true) {
+				while ((line = srvin.readLine()) != null) {
+					stdout.println(line);
+					stdout.flush();
+					if (line.equals("Enter place:") || line.equals("Game ended!")) {
+						break;
+					}
+				}
+				if (line.equals("Game ended!")) {
+					srvout.flush();
+					break;
+				}
+				line = stdin.readLine();
+				srvout.println(line);
+				srvout.flush();
+				if (line.equals("Game ended!")) {
+					break;
+				}
+			}
+			socket.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
