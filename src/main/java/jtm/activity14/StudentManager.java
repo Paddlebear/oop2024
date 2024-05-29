@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import jtm.activity13.Teacher;
 
 public class StudentManager {
 	protected Connection conn;
@@ -30,6 +33,13 @@ public class StudentManager {
 		 * server-wise, not just database-wise.
 		 * 3. Set AutoCommit to false and use conn.commit() where necessary in other methods
 		 */
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/?autoReconnect=true&serverTimezone=UTC&characterEncoding=utf8", user, password);
+			conn.setAutoCommit(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -44,6 +54,24 @@ public class StudentManager {
 		// its fields!
 		// Hint: Because default database is not set in connection,
 		// use full notation for table "databaseXX.Student"
+		String sql = "SELECT * FROM `database00`.`Student` where id=?;";
+		PreparedStatement preparedStatement;
+		ResultSet results;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			results = preparedStatement.executeQuery();
+			if (results.first()) {
+				return new Student(results.getInt("id"), results.getString("firstname"), results.getString("lastname"));
+			}
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -61,7 +89,27 @@ public class StudentManager {
 		// Note that search results of partial match
 		// in form ...like '%value%'... should be returned
 		// Note, that if nothing is found return empty list!
-		return null;
+		String sql = "SELECT * FROM `database00`.`Student` where firstname like ? and lastname like ?;";
+		PreparedStatement preparedStatement;
+		ResultSet results;
+		List<Student> students = new LinkedList<>();
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, "%" + firstName + "%");
+			preparedStatement.setString(2, "%" + lastName + "%");
+			results = preparedStatement.executeQuery();
+			while (results.first()) {
+				students.add(new Student(results.getInt("id"), results.getString("firstname"), results.getString("lastname")));
+			}
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return students;
 
 	}
 
@@ -75,6 +123,27 @@ public class StudentManager {
 
 	public boolean insertStudent(String firstName, String lastName) {
 		// TODO #4 Write an sql statement that inserts student in database.
+		String sql = "INSERT INTO `database00`.`Student` (`firstname`, `lastname`) VALUES (?, ?);";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, firstName);
+			preparedStatement.setString(2, lastName);
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -86,6 +155,28 @@ public class StudentManager {
 	 */
 	public boolean insertStudent(Student student) {
 		// TODO #5 Write an sql statement that inserts student in database.
+		String sql = "INSERT INTO `database00`.`Student` (`id`,`firstname`, `lastname`) VALUES (?, ?, ?);";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, student.getId());
+			preparedStatement.setString(2, student.getFirstName());
+			preparedStatement.setString(3, student.getLastName());
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -99,6 +190,28 @@ public class StudentManager {
 	public boolean updateStudent(Student student) {
 		boolean status = false;
 		// TODO #6 Write an sql statement that updates student information.
+		String sql = "UPDATE `database00`.`Student` SET `firstname` = ? `lastname` = ? WHERE `id` = ?;";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, student.getFirstName());
+			preparedStatement.setString(2, student.getLastName());
+			preparedStatement.setInt(3, student.getId());
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -111,11 +224,35 @@ public class StudentManager {
 	 */
 	public boolean deleteStudent(int id) {
 		// TODO #7 Write an sql statement that deletes student from database.
+		String sql = "DELETE FROM `database00`.`Student` WHERE `id` = ?;";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
 		return false;
 	}
 
 	public void closeConnecion() {
 		// TODO Close connection to the database server
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

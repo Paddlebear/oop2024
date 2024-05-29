@@ -116,7 +116,7 @@ public class Orders implements Iterator<Order> {
 		if (!iterator.hasNext() || iterator.equals(null)) {
 			throw new IllegalStateException();
 		}
-		orderList.remove(iterator);
+		orderList.remove((Order)iterator);
 		//currentIndex--;
 	}
 

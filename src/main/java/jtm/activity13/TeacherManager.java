@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class TeacherManager {
 	protected Connection conn;
 
@@ -129,7 +130,7 @@ public class TeacherManager {
 
 	public boolean insertTeacher(String firstName, String lastName) {
 		// TODO #4 Write an sql statement that inserts teacher in database.
-		String sql = "INSERT INTO `database00`.`Teacher` (`firstname`, `last`) VALUES (?, ?);";
+		String sql = "INSERT INTO `database00`.`Teacher` (`firstname`, `lastname`) VALUES (?, ?);";
 		PreparedStatement preparedStatement;
 		int rowsAffected = 0;
 		try {
@@ -161,6 +162,28 @@ public class TeacherManager {
 	 */
 	public boolean insertTeacher(Teacher teacher) {
 		// TODO #5 Write an sql statement that inserts teacher in database.
+		String sql = "INSERT INTO `database00`.`Teacher` (`id`,`firstname`, `lastname`) VALUES (?, ?, ?);";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, teacher.getId());
+			preparedStatement.setString(2, teacher.getFirstName());
+			preparedStatement.setString(3, teacher.getLastName());
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -173,6 +196,28 @@ public class TeacherManager {
 	 */
 	public boolean updateTeacher(Teacher teacher) {
 		// TODO #6 Write an sql statement that updates teacher information.
+		String sql = "UPDATE `database00`.`Teacher` SET `firstname` = ? `lastname` = ? WHERE `id` = ?;";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, teacher.getFirstName());
+			preparedStatement.setString(2, teacher.getLastName());
+			preparedStatement.setInt(3, teacher.getId());
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -185,6 +230,25 @@ public class TeacherManager {
 	 */
 	public boolean deleteTeacher(int id) {
 		// TODO #7 Write an sql statement that deletes teacher from database.
+		String sql = "DELETE FROM `database00`.`Teacher` WHERE `id` = ?;";
+		PreparedStatement preparedStatement;
+		int rowsAffected = 0;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			rowsAffected = preparedStatement.executeUpdate();
+			conn.commit();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		if (rowsAffected > 0) {
+			return true;
+		}
 		return false;
 	}
 
