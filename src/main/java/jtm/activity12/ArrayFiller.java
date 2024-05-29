@@ -15,10 +15,15 @@ public class ArrayFiller implements Runnable {
 	public ArrayFiller(int latency, int startValue) {
 		// TODO from this constructor call another constructor with more
 		// parameters and fill missing values from beginning till to the end of an array
+		this(latency, startValue, 0, ArrayFillerManager.array.length - 1);
 	}
 
 	public ArrayFiller(int latency, int startValue, int from, int to) {
 		// TODO save passed values to created filler object
+		this.latency = latency;
+		this.startValue = startValue;
+		this.from = from;
+		this.to = to;
 	}
 
 	@Override
@@ -29,6 +34,17 @@ public class ArrayFiller implements Runnable {
 		// initialize new Random(startValue + arrayCellNo) and then use
 		// random.nextInt() to get value for given cell
 		// Look at http://docs.oracle.com/javase/7/docs/api/java/util/Random.html
+		try {
+			Thread.sleep(latency);
+		} catch(InterruptedException e) { }
+
+		for (int i = from; i <= to; i++) {
+			random = new Random(startValue+i);
+			int value = random.nextInt();
+			if (i < array.length) {
+				array[i] = value;
+			}
+		}
 	}
 
 }

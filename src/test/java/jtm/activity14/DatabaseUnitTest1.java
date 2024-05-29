@@ -2,20 +2,33 @@ package jtm.activity14;
 
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
 
+import ch.qos.logback.classic.db.SQLBuilder;
+
+import static org.mockito.Mockito.*;
+import static jtm.activity14.StudentManager.user;
+import static jtm.activity14.StudentManager.password;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DatabaseUnitTest1 {
-    
+
     static StudentManager manager;
     static int id1;
     static Student test1, test2;
@@ -23,14 +36,20 @@ public class DatabaseUnitTest1 {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        id1 = 10;
+        test1 = new Student(10, "Name10", "Surname10");
+    }
+
+    @Before
+    public static void setUpBefore() throws Exception {
         manager = new StudentManager();
         mockedManager = mock(StudentManager.class);
         id1 = 10;
         test1 = new Student(10, "Name10", "Surname10");
     }
 
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
+    @After
+    public static void tearDownAfter() throws Exception {
         manager.closeConnecion();
     }
 
@@ -84,15 +103,28 @@ public class DatabaseUnitTest1 {
     }
 
     @Test
-    public void test10NegativeTest() {
-        Student test1 = new Student();
-        mockedManager = mock(StudentManager.class);
-        doThrow(new RuntimeException()).when(mockedManager).insertStudent(any(Student.class));
+    public void test10Failures() {
         try {
-            mockedManager.insertStudent(test1);
-            Assert.fail();
+            Connection mockedConn = Mockito.spy(DriverManager.getConnection("jdbc:mysql://localhost/?autoReconnect=true&serverTimezone=UTC&characterEncoding=utf8", user, password));
+            doThrow(new SQLException("Commit exception")).when(mockedConn).commit();
+            doThrow(new SQLException("Prepare statement exception")).when(mockedConn).prepareStatement(Mockito.anyString());
+            doThrow(new SQLException("Change autocommit exception")).when(mockedConn).setAutoCommit(false);
+            doThrow(new SQLException("Close exception")).when(mockedConn).close();
+            manager.conn = mockedConn;
+            try {
+                manager.insertStudent("", "");
+                manager.insertStudent(new Student(0, "", ""));
+                manager.findStudent(0);
+                manager.findStudent("", "");
+                manager.updateStudent(new Student(0, "", ""));
+                manager.deleteStudent(0);
+                manager.closeConnecion();
+            } catch (Exception e) {
+                System.err.println("Test10 expected failure:" + Arrays.asList(e.getStackTrace()));
+            }
         } catch (Exception e) {
-            System.out.println(e);
+            Assert.fail("Test10 unexpected failure:" + Arrays.asList(e.getStackTrace()));
         }
     }
+
 }
