@@ -10,6 +10,8 @@ import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.h2.mvstore.db.TransactionStore.Change;
+
 import net.miginfocom.swing.MigLayout;
 
 /*- TODO Install WindowBulder plugin on Eclipse
@@ -65,6 +67,25 @@ public class ColorSlider {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new MigLayout("", "[][][grow]", "[][][][][][grow]"));
+
+		redSlider = new JSlider();
+		redSlider.setName("redSlider");
+		redSlider.setValue(0);
+		redSlider.setMaximum(255);
+		frame.getContentPane().add(redSlider, "cell 2 0, growx");
+
+		greenSlider = new JSlider();
+		greenSlider.setName("greenSlider");
+		greenSlider.setValue(0);
+		greenSlider.setMaximum(255);
+		frame.getContentPane().add(greenSlider, "cell 2 1, growx");
+
+		blueSlider = new JSlider();
+		blueSlider.setName("blueSlider");
+		blueSlider.setValue(0);
+		blueSlider.setMaximum(255);
+		frame.getContentPane().add(blueSlider, "cell 2 2, growx");
+
 		txtTest = new JTextArea();
 		txtTest.setName("testArea");
 		txtTest.setText("Test area");
@@ -90,6 +111,7 @@ public class ColorSlider {
 
 
 		// TODO set initial values of sliders to 0 and text area background to black
+		setBackgroundColor();
 
 		// Make JFrame visible
 		frame.setVisible(true);
@@ -99,11 +121,27 @@ public class ColorSlider {
 	private void add_listeners() {
 		// TODO add event listeners to all sliders and call change_color method
 		// from them
+		redSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged (ChangeEvent arg0) {
+				setBackgroundColor();
+			}
+		});
+		greenSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged (ChangeEvent arg0) {
+				setBackgroundColor();
+			}
+		});
+		blueSlider.addChangeListener(new ChangeListener() {
+			public void stateChanged (ChangeEvent arg0) {
+				setBackgroundColor();
+			}
+		});
 	}
 
 	private void setBackgroundColor() {
 		// TODO change background id of txtTest object accordingly to
 		// id slider values. Use Color object for that
+		txtTest.setBackground(new Color (redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue()));
 	}
 
 }

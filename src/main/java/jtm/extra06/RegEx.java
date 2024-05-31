@@ -17,8 +17,18 @@ public class RegEx {
 
 		// TODO #1 Remove all non digits from the input.
 		// HINT: use negation pattern.
+		String numbersOnly = input.replaceAll("[^0-9]", input);
+		System.out.println(numbersOnly);
 
 		// TODO #2 count the sum of all digits, and check if the sum is lucky
+		int sum = 0;
+		for (int i = 0; i < numbersOnly.length(); i++) {
+			sum = sum + Integer.parseInt(numbersOnly.substring(i, i+1));
+			System.out.println(sum);
+		}
+		if (sum == 25) {
+			return true;
+		}
 		return false;
 
 	}
@@ -33,6 +43,11 @@ public class RegEx {
 	 *         "Ken..ny" return -1.
 	 */
 	public int findKenny(String input) {
+		Pattern pattern = Pattern.compile("Ke(l{2,}|n{2,}y");
+		Matcher matcher = pattern.matcher(input);
+		if (matcher.find()) {
+			return matcher.start();
+		}
 		return -1;
 	}
 
@@ -47,6 +62,6 @@ public class RegEx {
 	 */
 	public boolean isGood(String telephoneNumber) {
 		// TODO #5 check with "matches" method if this number is valid.
-		return false;
+		return telephoneNumber.matches("(^\\+371)?(66|67)[0-9]{6}");
 	}
 }

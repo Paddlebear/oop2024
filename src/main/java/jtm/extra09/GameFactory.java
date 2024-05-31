@@ -1,6 +1,9 @@
 package jtm.extra09;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import static jtm.extra09.CrocodileGame.crocodile;
 
 public class GameFactory {
 
@@ -12,6 +15,7 @@ public class GameFactory {
 	 */
 	public static void setBoard(Board board) {
 		// TODO #1: set passed board to the CrocodileGame
+		CrocodileGame.board = board;
 	}
 
 	/**
@@ -24,6 +28,16 @@ public class GameFactory {
 		// TODO #2: add new Crocodile to the list according of CrocodileGame
 		// according to the passed type
 		// Check if list is initialized and initialize it if necessary
+		if (crocodile == null) {
+			crocodile = new LinkedList<>();
+		}
+		if ("CrocodileSimple".equals(crocodileType)) {
+			crocodile.add(new CrocodileSimple());
+		}
+		if ("CrocodileGreedy".equals(crocodileType)) {
+			crocodile.add(new CrocodileGreedy());
+		}
+
 	}
 
 }

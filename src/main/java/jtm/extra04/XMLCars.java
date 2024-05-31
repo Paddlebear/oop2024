@@ -1,10 +1,27 @@
 
 package jtm.extra04;
 
+import java.io.StringWriter;
+
 // TODO #1
 // Import necessary classes from javax.xml.* and, if necessary, org.w3c.dom.*
+import javax.xml.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import org.w3c.dom.*;
 
 public class XMLCars {
+
+	Document doc;
 
 	/*- TODO #2
 	 * Declare variables to remember previously generated structure of XML
@@ -12,6 +29,14 @@ public class XMLCars {
 
 
 	public void addCar(int id, String model, String color, int year, float price, String notes) throws Exception {
+		
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Element rootElement = null;
+
+		if (doc == null) {
+			doc = builder.newDocument();
+		}
 		// TODO #3
 		/*- Implement method which adds new car elements into XML structure.
 		 * Note, that:
@@ -28,7 +53,38 @@ public class XMLCars {
 		 *   Look at https://docs.oracle.com/javase/7/docs/api/javax/xml/parsers/DocumentBuilder.html and
 		 *           https://docs.oracle.com/javase/7/docs/api/org/w3c/dom/package-summary.html
 		 */
+		rootElement = doc.getDocumentElement();
+		 if (rootElement == null) {
+			rootElement = doc.createElement("cars");
+			doc.appendChild(rootElement);
+		 }
 
+		 Element carElement = doc.createElement("car");
+		 carElement.setAttribute("id", String.format("%04d", id));
+		 carElement.setAttribute("notes", notes);
+
+		 Element modelElement = doc.createElement("model");
+		 modelElement.appendChild(doc.createTextNode(model));
+		 carElement.appendChild(modelElement);
+
+		 Element colorElement = doc.createElement("color");
+		 colorElement.appendChild(doc.createTextNode(color));
+		 carElement.appendChild(colorElement);
+
+		 Element yearElement = doc.createElement("year");
+		 yearElement.appendChild(doc.createTextNode(Integer.toString(year)));
+		 carElement.appendChild(yearElement);
+
+		 Element priceElement = doc.createElement("price");
+		 priceElement.appendChild(doc.createTextNode(Float.toString(price)));
+		 carElement.appendChild(priceElement);
+
+		 Comment comment = doc.createComment(notes);
+		 carElement.appendChild(comment);
+
+		 //Comment comment = doc.createComment(comment);
+
+		 rootElement.appendChild(carElement);
 
 	}
 
@@ -44,7 +100,16 @@ public class XMLCars {
 		 * HINT: look at:
 		 * https://docs.oracle.com/javase/7/docs/api/javax/xml/transform/Transformer.html
 		 */
-		return "";
+
+		DOMSource domSource = new DOMSource(doc);
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+		transformer.transform(domSource, result);
+		return writer.toString();
 
 	}
 
@@ -61,7 +126,11 @@ public class XMLCars {
 		 * HINT:
 		 * Use https://docs.oracle.com/javase/7/docs/api/javax/xml/validation/Validator.html
 		 */
-		return false;
+		SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = factory.newSchema(new StreamSource(new java.io.StringReader(schemaSource)));
+		Validator validator = schema.newValidator();
+		validator.validate(new StreamSource(new java.io.StringReader(xmlSource)));
+		return true;
 	}
 
 }
