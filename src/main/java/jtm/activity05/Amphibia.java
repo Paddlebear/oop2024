@@ -18,7 +18,7 @@ public class Amphibia extends Vehicle{
     @Override
     public String move(Road road) {
         if (road.getClass() == WaterRoad.class) {
-            return getType() + " is sailing on" + road + " with " + buras + " sails";
+            return getType() + " is sailing on " + road + " with " + buras + " sails";
         }
         return super.move(road);
     }

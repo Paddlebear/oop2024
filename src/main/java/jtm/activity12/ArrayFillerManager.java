@@ -71,21 +71,27 @@ public class ArrayFillerManager {
 		// Note that this method emulates, what would happen if you do proper
 		// buffering and scaling of the execution.
 
-		int threadCount = 4;
-		int arraySize = array.length;
+		int threadNo = 4;
+		int length = array.length;
+		int range = length / threadNo;
+		int from = 0;
+		int to = 0;
 		threads = new LinkedList<>();
-
-		for (int i = 1; i <= threadCount; i++) {
-			int from = i * arraySize / threadCount;
-			int to = (i+1) * arraySize / threadCount;
+		for (int step = 1; step <= threadNo; step++) {
+			to += range;
+			if (step == threadNo)
+				to = length - 1;
 			Thread thread = new Thread(new ArrayFiller(latency, startValue, from, to));
 			thread.start();
 			threads.add(thread);
+			from = to + 1;
 		}
 		for (Thread thread : threads) {
 			try {
 				thread.join();
-			} catch (InterruptedException e) { e.printStackTrace(); }
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

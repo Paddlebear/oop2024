@@ -110,7 +110,30 @@ public class Zodiac {
 	public static void main(String[] args) {
 		// HINT: you can use main method to test your getZodiac method with
 		// different parameters
-		System.out.println(getZodiac(20, 1));
+		System.out.println(getZodiac(19, 1));
+        System.out.println(getZodiac(20, 1));
+        System.out.println(getZodiac(18, 2));
+        System.out.println(getZodiac(19, 2));
+        System.out.println(getZodiac(20, 3));
+        System.out.println(getZodiac(21, 3));
+        System.out.println(getZodiac(19, 4));
+        System.out.println(getZodiac(20, 4));
+        System.out.println(getZodiac(20, 5));
+        System.out.println(getZodiac(21, 5));
+        System.out.println(getZodiac(20, 6));
+        System.out.println(getZodiac(21, 6));
+        System.out.println(getZodiac(22, 7));
+        System.out.println(getZodiac(23, 7));
+        System.out.println(getZodiac(22, 8));
+        System.out.println(getZodiac(23, 8));
+        System.out.println(getZodiac(22, 9));
+        System.out.println(getZodiac(23, 9));
+        System.out.println(getZodiac(22, 10));
+        System.out.println(getZodiac(23, 10));
+        System.out.println(getZodiac(21, 11));
+        System.out.println(getZodiac(22, 11));
+        System.out.println(getZodiac(21, 12));
+        System.out.println(getZodiac(22, 12));
 	}
 
 }
