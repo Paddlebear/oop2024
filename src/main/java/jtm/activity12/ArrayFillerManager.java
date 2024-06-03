@@ -54,10 +54,7 @@ public class ArrayFillerManager {
 		// Note that this method emulates, what would happen if you would do
 		// proper "buffering" with large amount of data, but do execution just
 		// in single thread.
-		for (int i = 0; i < array.length - 1; i++) {
-			ArrayFiller arrayFiller = new ArrayFiller(latency, startValue, 0, array.length - 1);
-			arrayFiller.run();
-		}
+		new ArrayFiller(latency, startValue).run();
 	}
 
 	public static void fillParalelly() {
@@ -78,7 +75,7 @@ public class ArrayFillerManager {
 		int arraySize = array.length;
 		threads = new LinkedList<>();
 
-		for (int i = 0; i < threadCount; i++) {
+		for (int i = 1; i <= threadCount; i++) {
 			int from = i * arraySize / threadCount;
 			int to = (i+1) * arraySize / threadCount;
 			Thread thread = new Thread(new ArrayFiller(latency, startValue, from, to));

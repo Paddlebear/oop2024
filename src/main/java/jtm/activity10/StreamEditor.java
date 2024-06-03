@@ -37,7 +37,7 @@ public class StreamEditor {
 	public static void main(String[] args) throws Exception {
 		String inFileName, outFileName; // Names of input and output files
 		int inLineNo = 0; // Line number, which needs to be changed, deleted
-		String content = null; // String content which needs to be put in line
+		String content; // String content which needs to be put in line
 		PrintWriter writer = null; // Buffered writer of characters
 		BufferedReader reader = null; // Buffered reader of characters
 		File inFile; // File for file system operations
@@ -68,13 +68,14 @@ public class StreamEditor {
 		if (!args[1].equals("-")) {
 			content = args[1];
 		}
+		else content = null;
 
 		/*- TODO Initialize new buffered character reader (BufferedReader) and:
 		 * 1. If input file name (3rd parameter) is "-", add reader to the Standard input (System.in).
 		 * 2. Otherwise check if file exists (if it doesn't, create it) and 
 		 *    add reader to this file.
 		 */
-		if (!args[2].equals("-")) {
+		if ("-".equals(args[2])) {
 			reader = new BufferedReader(new InputStreamReader(System.in));
 		} else {
 			inFile = new File(args[2]);
@@ -96,27 +97,24 @@ public class StreamEditor {
 		// content or just skip appending it to the writer.
 		// NOTE: append break at the end of written line only if it is NOT null
 		// or empty string!
-		while((curLineContent = reader.readLine()) != null) {
+		while ((curLineContent = reader.readLine()) != null) {
 			curLineNo++;
-			if (inLineNo > 0 && curLineNo == inLineNo) {
+			if (curLineNo == inLineNo)
 				if (delete)
 					continue;
-				else if (content != null && !content.isEmpty()) {
+				else {
 					writer.println(content);
+					continue;
 				}
-			} else if (inLineNo < 0 && curLineNo == -inLineNo) {
-				delete = true;
-			} else {
+			else if (!"".equals(curLineContent))
 				writer.println(curLineContent);
-			}
 		}
 
 		// TODO If number of input line is larger than number of lines in file,
 		// pad file with empty lines before necessary line.
-		if (inLineNo > curLineNo) {
-			while (curLineNo < inLineNo - 1) {
+		if (curLineNo < inLineNo) {
+			for (int i = curLineNo; i < inLineNo - 1; i++) {
 				writer.println();
-				curLineNo++;
 			}
 			writer.println(content);
 		}

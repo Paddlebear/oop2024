@@ -106,8 +106,8 @@ public class JettyController {
 				sb.append("</tr>\n");
 			}
 			sb.append("</table><br>\n");
-			sb.append("<a href='/'>Back</a>\n");
 		}
+		sb.append("<a href='/'>Back</a>\n");
 		return sb.toString();
 	}
 

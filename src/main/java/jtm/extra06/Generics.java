@@ -24,7 +24,7 @@ public class Generics<E extends Number> extends LinkedList<E> {
 
 	public Generics() {
 		super();
-		log.append("Generics instance created ");
+		log.append("Generics instance created\n");
 	}
 
 	// TODO #4
@@ -45,14 +45,13 @@ public class Generics<E extends Number> extends LinkedList<E> {
 	
 	@Override
 	public E pop() {
-		E element = super.pop();
-		log.append(element.getClass().getName()).append(": ").append(element).append(" popped\n");
-		return element;
+		log.append(super.getFirst().getClass().getTypeName() + ": " + super.getFirst() + " popped\n");
+		return super.pop();
 	}
 
 	@Override
 	public void push(E e) {
-		log.append(e.getClass().getName()).append(": ").append(e).append(" pushed\n");
+		log.append(e.getClass().getTypeName() + ": " + e + " pushed\n");
 		super.push(e);
 	}
 }

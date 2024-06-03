@@ -26,7 +26,7 @@ public class MoveGreedy implements MoveStrategy {
                 moves++;
             }
         }
-        moves--;
+        moves = moves - 2;
         ((CrocodileGreedy) crocodile).setCandies(candies);
         ((CrocodileGreedy) crocodile).setMoves(moves);
         System.out.println(board);

@@ -18,80 +18,90 @@ public class Zodiac {
 		// Tropical zodiac, to get appropriate date ranges for signs
 		switch (month)
             {
-				default:
-                    zodiac = null;
                 case 1:
-                    if (day < 19)
+                    if (day <= 19)
                     {
                         zodiac = "Capricorn";
                     }
-                    zodiac = "Aquarius";
+                    else zodiac = "Aquarius";
+                    break;
                 case 2:
                     if (day <= 18)
                     {
                         zodiac = "Aquarius";
                     }
-                    zodiac = "Pisces";
+                    else zodiac = "Pisces";
+                    break;
                 case 3:
                     if (day <= 20)
                     {
                         zodiac = "Pisces";
                     }
-                    zodiac = "Aries";
+                    else zodiac = "Aries";
+                    break;
                 case 4:
                     if (day <= 19)
                     {
                         zodiac = "Aries";
                     }
-                    zodiac = "Taurus";
+                    else zodiac = "Taurus";
+                    break;
                 case 5:
                     if (day <= 20)
                     {
 						zodiac = "Taurus";
                     }
-                    zodiac = "Gemini";
+                    else zodiac = "Gemini";
+                    break;
                 case 6:
                     if (day <= 20)
                     {
                         zodiac = "Gemini";
                     }
-                    zodiac = "Cancer";
+                    else zodiac = "Cancer";
+                    break;
                 case 7:
                     if (day <= 22)
                     {
                         zodiac = "Cancer";
                     }
-                    zodiac = "Leo";
+                    else zodiac = "Leo";
+                    break;
                 case 8:
                     if (day <= 22)
                     {
                         zodiac = "Leo";
                     }
-                    zodiac = "Virgo";
+                    else zodiac = "Virgo";
+                    break;
                 case 9:
                     if (day <= 22)
                     {
                         zodiac = "Virgo";
                     }
-                    zodiac = "Libra";
+                    else zodiac = "Libra";
+                    break;
                 case 10:
                     if (day <= 22)
                     {
                         zodiac = "Libra";
                     }
-                    zodiac = "Scorpio";
+                    else zodiac = "Scorpio";
+                    break;
                 case 11:
                     if (day <= 21)
                     {
                         zodiac = "Scorpio";
                     }
-					zodiac = "Sagittarius";
+					else zodiac = "Sagittarius";
+                    break;
                 case 12:
                     if (day <= 21)
                     {
                         zodiac = "Sagittarius";
                     }
-                    zodiac = "Capricorn";
+                    else zodiac = "Capricorn";
+                    break;
             }
 
 		return zodiac;
@@ -100,7 +110,7 @@ public class Zodiac {
 	public static void main(String[] args) {
 		// HINT: you can use main method to test your getZodiac method with
 		// different parameters
-		System.out.println(getZodiac(1, 1));
+		System.out.println(getZodiac(20, 1));
 	}
 
 }
