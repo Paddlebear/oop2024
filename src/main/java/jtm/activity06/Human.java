@@ -16,16 +16,16 @@ public class Human implements Humanoid{
         }
     }
 
-    @Override
-    public Object vomit() {
-        int temp = stomach;
-        stomach = 0;
-        return temp;
-    }
+    // @Override
+    // public Object vomit() {
+    //     int temp = stomach;
+    //     stomach = 0;
+    //     return temp;
+    // }
 
     @Override
     public String isAlive() {
-        if (alive = true) {
+        if (alive == true) {
             return "Alive";
         }
         return "Dead";
@@ -45,5 +45,14 @@ public class Human implements Humanoid{
     @Override
     public String toString() {
         return getClass().getSimpleName() + ": " + getWeight() + " [" + stomach + "]";
+    }
+
+    @Override
+    public Integer vomit() {
+        int temp = stomach;
+        if (stomach > 0) {
+            stomach = 0;
+        }
+        return temp;
     }
 }

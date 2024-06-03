@@ -17,8 +17,8 @@ public class RegEx {
 
 		// TODO #1 Remove all non digits from the input.
 		// HINT: use negation pattern.
-		String numbersOnly = input.replaceAll("[^0-9]", input);
-		System.out.println(numbersOnly);
+		String numbersOnly = input.replaceAll("[^0-9]", "");
+		//System.out.println(numbersOnly);
 
 		// TODO #2 count the sum of all digits, and check if the sum is lucky
 		int sum = 0;
@@ -43,7 +43,7 @@ public class RegEx {
 	 *         "Ken..ny" return -1.
 	 */
 	public int findKenny(String input) {
-		Pattern pattern = Pattern.compile("Ke(l{2,}|n{2,}y");
+		Pattern pattern = Pattern.compile("Ke(l{2,}|n{2,})y");
 		Matcher matcher = pattern.matcher(input);
 		if (matcher.find()) {
 			return matcher.start();

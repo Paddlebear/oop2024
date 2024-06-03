@@ -24,6 +24,7 @@ public class ArrayFiller implements Runnable {
 		this.startValue = startValue;
 		this.from = from;
 		this.to = to;
+		random = new Random();
 	}
 
 	@Override

@@ -66,28 +66,29 @@ public class Orders implements Iterator<Order> {
 	// Calculate Set of Orders from list
 	public Set<Order> getItemsSet() {
 		Collections.sort(orderList);
-		Set<Order> bulkOrdersSet = new TreeSet<>();
-		Order prevOrder = new Order(null,"",0);
-		Order bulkOrder = null;
+		Set<Order> orderSet = new TreeSet<Order>();
+		Order prev = null;
+		Order curr = null;
 
-		for (Order currentOrder : orderList) {
-			if (prevOrder.name.equals(currentOrder.name)) {
-				bulkOrder.customer = bulkOrder.customer + "," + currentOrder.customer;
-				bulkOrder.count = bulkOrder.count + currentOrder.count;
-			} else {
-				if (bulkOrder != null) {
-					bulkOrdersSet.add(bulkOrder);
+		if (hasNext())
+			prev = next();
+
+		while (hasNext()) {
+			curr = next();
+			if (curr.name.equals(prev.name)) {
+				prev.count = prev.count + curr.count;
+				if (!prev.customer.contains(curr.customer)) {
+					prev.customer = prev.customer + "," + curr.customer;
 				}
-
-				bulkOrder = new Order(currentOrder.customer,currentOrder.name,currentOrder.count);
+			} else {
+				orderSet.add(prev);
+				prev = curr;
 			}
-			prevOrder = currentOrder;
+			if (!hasNext()) {
+				orderSet.add(prev);
+			}
 		}
-		if (bulkOrder != null) {
-			bulkOrdersSet.add(bulkOrder);
-		}
-		// This has an issue
-		return bulkOrdersSet;
+		return orderSet;
 
 	}
 
@@ -113,11 +114,12 @@ public class Orders implements Iterator<Order> {
 
 	// Remove current Order from list
 	public void remove() {
-		if (!iterator.hasNext() || iterator.equals(null)) {
+		try {
+			iterator.remove();
+			iterator = orderList.iterator();
+		} catch (Exception e) {
 			throw new IllegalStateException();
 		}
-		orderList.remove((Order)iterator);
-		//currentIndex--;
 	}
 
 	// Show list of Orders as a String

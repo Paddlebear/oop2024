@@ -12,9 +12,10 @@ public class MoveGreedy implements MoveStrategy {
         int x = 0, y = 0;
         System.out.println("board: x:" + board.getX() + " y:" + board.getY());
         for (y = 0; y < board.getY() - 1; y++) {
-            for (x = 0; x < board.getX() - 1; x++) {
-                if ('●' == board.getCandy(x, y))
+            for (x = 0; x < board.getX(); x++) {
+                if ('●' == board.getCandy(x, y)) {
                     candies++;
+                }
                 board.setCandy(x, y, '◎');
                 System.out.println("x:" + x + ", y:" +y);
                 moves++;

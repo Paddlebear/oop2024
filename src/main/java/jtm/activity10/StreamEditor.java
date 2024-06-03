@@ -59,6 +59,10 @@ public class StreamEditor {
 		// deleted if number is negative.
 		// Hint. Use Integer.parseInt() to parse String into integer
 		inLineNo = Integer.parseInt(args[0]);
+		if (inLineNo < 0) {
+			inLineNo = inLineNo * -1;
+			delete = true;
+		}
 
 		// TODO set value of the string from 2nd parameter into content
 		if (!args[1].equals("-")) {
@@ -73,11 +77,11 @@ public class StreamEditor {
 		if (!args[2].equals("-")) {
 			reader = new BufferedReader(new InputStreamReader(System.in));
 		} else {
-			File file = new File(args[2]);
-			if (!file.exists()) {
-				file.createNewFile();
+			inFile = new File(args[2]);
+			if (!inFile.exists()) {
+				inFile.createNewFile();
 			}
-			reader = new BufferedReader(new FileReader(file));
+			reader = new BufferedReader(new FileReader(inFile));
 		}
 
 		/*- TODO Initialize new buffered character writer (PrintWriter) and:
@@ -95,7 +99,9 @@ public class StreamEditor {
 		while((curLineContent = reader.readLine()) != null) {
 			curLineNo++;
 			if (inLineNo > 0 && curLineNo == inLineNo) {
-				if (content != null && !content.isEmpty()) {
+				if (delete)
+					continue;
+				else if (content != null && !content.isEmpty()) {
 					writer.println(content);
 				}
 			} else if (inLineNo < 0 && curLineNo == -inLineNo) {

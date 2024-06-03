@@ -58,15 +58,15 @@ public class TeacherManager {
 		 * 2. Do not't use transactions for search (autocommit=false, commit() is not called)
 		 *    because table should not be blocked for concurrent write during search
 		 */
-		String sql = "SELECT * FROM `database00`.`Teacher` where id=?;";
+		String sql = "SELECT * FROM " + database + ".Teacher where id = ?";
 		PreparedStatement preparedStatement;
 		ResultSet results;
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			results = preparedStatement.executeQuery();
-			if (results.first()) {
-				return new Teacher(results.getInt("id"), results.getString("firstname"), results.getString("lastname"));
+			if (results.next()) {
+				return new Teacher(results.getInt("id"), results.getString(2), results.getString(3));
 			}
 		} catch (SQLException e) {
 			try {
@@ -76,7 +76,7 @@ public class TeacherManager {
 			}
 			e.printStackTrace();
 		}
-		return null;
+		return new Teacher();
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class TeacherManager {
 		 * because table should not be blocked for concurrent write during search
 		 */
 
-		String sql = "SELECT * FROM `database00`.`Teacher` where firstname like ? and lastname like ?;";
+		String sql = "SELECT * FROM " + database + ".Teacher where firstname like ? and lastname like ?";
 		PreparedStatement preparedStatement;
 		ResultSet results;
 		List<Teacher> teachers = new LinkedList<>();
@@ -106,8 +106,8 @@ public class TeacherManager {
 			preparedStatement.setString(1, "%" + firstName + "%");
 			preparedStatement.setString(2, "%" + lastName + "%");
 			results = preparedStatement.executeQuery();
-			while (results.first()) {
-				teachers.add(new Teacher(results.getInt("id"), results.getString("firstname"), results.getString("lastname")));
+			while (results.next()) {
+				teachers.add(new Teacher(results.getInt("id"), results.getString(2), results.getString(3)));
 			}
 		} catch (SQLException e) {
 			try {
@@ -130,7 +130,7 @@ public class TeacherManager {
 
 	public boolean insertTeacher(String firstName, String lastName) {
 		// TODO #4 Write an sql statement that inserts teacher in database.
-		String sql = "INSERT INTO `database00`.`Teacher` (`firstname`, `lastname`) VALUES (?, ?);";
+		String sql = "INSERT INTO " + database + ".Teacher (firstname, lastname) VALUES ( ?, ?);";
 		PreparedStatement preparedStatement;
 		int rowsAffected = 0;
 		try {
@@ -147,7 +147,7 @@ public class TeacherManager {
 			}
 			e.printStackTrace();
 		}
-		if (rowsAffected > 0) {
+		if (rowsAffected == 1) {
 			return true;
 		}
 
@@ -162,7 +162,7 @@ public class TeacherManager {
 	 */
 	public boolean insertTeacher(Teacher teacher) {
 		// TODO #5 Write an sql statement that inserts teacher in database.
-		String sql = "INSERT INTO `database00`.`Teacher` (`id`,`firstname`, `lastname`) VALUES (?, ?, ?);";
+		String sql = "INSERT INTO " + database + ".Teacher (id,firstname, lastname) VALUES (?, ?, ?);";
 		PreparedStatement preparedStatement;
 		int rowsAffected = 0;
 		try {
@@ -180,7 +180,7 @@ public class TeacherManager {
 			}
 			e.printStackTrace();
 		}
-		if (rowsAffected > 0) {
+		if (rowsAffected == 1) {
 			return true;
 		}
 
@@ -196,7 +196,7 @@ public class TeacherManager {
 	 */
 	public boolean updateTeacher(Teacher teacher) {
 		// TODO #6 Write an sql statement that updates teacher information.
-		String sql = "UPDATE `database00`.`Teacher` SET `firstname` = ? `lastname` = ? WHERE `id` = ?;";
+		String sql = "UPDATE " + database + ".Teacher SET firstname = ?, lastname = ? WHERE (id = ?)";
 		PreparedStatement preparedStatement;
 		int rowsAffected = 0;
 		try {
@@ -230,7 +230,7 @@ public class TeacherManager {
 	 */
 	public boolean deleteTeacher(int id) {
 		// TODO #7 Write an sql statement that deletes teacher from database.
-		String sql = "DELETE FROM `database00`.`Teacher` WHERE `id` = ?;";
+		String sql = "DELETE FROM " + database + ".Teacher WHERE (id = ?)";
 		PreparedStatement preparedStatement;
 		int rowsAffected = 0;
 		try {
@@ -246,7 +246,7 @@ public class TeacherManager {
 			}
 			e.printStackTrace();
 		}
-		if (rowsAffected > 0) {
+		if (rowsAffected == 1) {
 			return true;
 		}
 		return false;

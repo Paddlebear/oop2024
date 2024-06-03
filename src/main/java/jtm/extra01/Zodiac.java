@@ -21,7 +21,7 @@ public class Zodiac {
 				default:
                     zodiac = null;
                 case 1:
-                    if (day <= 19)
+                    if (day < 19)
                     {
                         zodiac = "Capricorn";
                     }

@@ -24,7 +24,7 @@ public class Generics<E extends Number> extends LinkedList<E> {
 
 	public Generics() {
 		super();
-		log.append("Generics instance created");
+		log.append("Generics instance created ");
 	}
 
 	// TODO #4

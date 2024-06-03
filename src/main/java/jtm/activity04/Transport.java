@@ -73,7 +73,7 @@ public class Transport {
 
 	@Override
 	public String toString() {
-		return String.format("Id:%s cons:%.1fl/100km, tank:%dl, fuel:%.2fl", id, consumption, tankSize, fuelInTank);
+		return String.format(Locale.US, "Id:%s cons:%.1fl/100km, tank:%dl, fuel:%.2fl", id, consumption, tankSize, fuelInTank);
 		 
 	}
 
